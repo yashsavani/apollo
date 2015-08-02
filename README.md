@@ -4,4 +4,4 @@ Apollo is a deep learning codebase attempting to provide the functionality of To
 
 Apollo is in no way endorsed by the The Regents of the University of California or the Caffe Contributors
 
-https://travis-ci.org/Russell91/apollo.svg?branch=master
+<img src="https://travis-ci.org/Russell91/apollo.svg?branch=master"></img>

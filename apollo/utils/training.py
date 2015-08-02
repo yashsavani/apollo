@@ -64,7 +64,7 @@ def default_train(hyper, forward, test_forward=None):
     else:
         test_net = net
     if 'weights' in hyper:
-        logging.info('Loading weights from %s' % weights)
+        logging.info('Loading weights from %s' % hyper['weights'])
         net.load(hyper['weights'])
 
     train_loss_hist = []

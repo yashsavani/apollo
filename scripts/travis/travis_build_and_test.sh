@@ -11,7 +11,7 @@ if $WITH_CMAKE; then
   $MAKE
   if ! $WITH_CUDA; then
     $MAKE runtest
-    $MAKE lint
+    #$MAKE lint
   fi
   $MAKE clean
   cd -
@@ -29,6 +29,6 @@ else
   $MAKE pytest
   $MAKE warn
   if ! $WITH_CUDA; then
-    $MAKE lint
+    #$MAKE lint
   fi
 fi

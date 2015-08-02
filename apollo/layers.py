@@ -8,7 +8,7 @@ from caffe_pb2 import DataParameter
 import numpy as np
 
 class Layer(object):
-    def __init__(self, kwargs): #name, bottoms, tops, params=[]):
+    def __init__(self, kwargs):
         name = kwargs['name']
         bottoms = kwargs.get('bottoms', [])
         tops = kwargs.get('tops', [name])
@@ -38,9 +38,34 @@ class Layer(object):
                 self.p.phase = caffe_pb2.TEST
             else:
                 raise ValueError('Unknown phase')
+        self.deploy = kwargs.get('deploy', True)
+        self.train = kwargs.get('train', True)
+
+class PyLayer(Layer):
+    def __init__(self, **kwargs):
+        super(PyLayer ,self).__init__(kwargs)
+        self.kwargs = kwargs
+        self.p.type = 'Py'
+        if 'param_shapes' in kwargs:
+            for shape in kwarg['param_shapes']:
+                param_shape = self.p.py_param.param_shapes.add()
+                for dimension in shape:
+                    param_shape.dimension.append(dimension)
+        if 'param_fillers' in kwargs:
+            assert len(kwargs['param_shapes']) == len(kwargs['param_filler'])
+            for filler in kwarg['param_fillers']:
+                filler_param = self.p.py_param.param_fillers.add()
+                filler_param.CopyFrom(filler.filler_param)
+    def setup(self, bottom_vec, top_vec):
+        pass
+    def forward(self, bottom_vec, top_vec):
+        pass
+    def backward(self, bottom_vec, top_vec):
+        pass
 
 class LossLayer(Layer):
     def __init__(self, kwargs):
+        kwargs['deploy'] = kwargs.get('deploy', False)
         super(LossLayer ,self).__init__(kwargs)
         tops = kwargs.get('tops', [kwargs['name']])
         loss_weight = kwargs.get('loss_weight', 1.)
@@ -313,6 +338,13 @@ class SoftmaxWithLoss(LossLayer):
         if ignore_label is not None:
             self.p.loss_param.ignore_label = ignore_label
 
+class Accuracy(LossLayer):
+    def __init__(self, ignore_label=None, **kwargs):
+        super(Accuracy, self).__init__(kwargs)
+        self.p.type = type(self).__name__
+        if ignore_label is not None:
+            self.p.loss_param.ignore_label = ignore_label
+
 class Transpose(Layer):
     def __init__(self, ignore_label=None, normalize=None, **kwargs):
         super(Transpose, self).__init__(kwargs)
@@ -334,3 +366,52 @@ class Wordvec(Layer):
         self.p.wordvec_param.vocab_size = vocab_size
         if 'weight_filler' in kwargs:
             self.p.wordvec_param.weight_filler.CopyFrom(kwargs['weight_filler'].filler_param)
+
+# =======================================================
+# Python Layers
+# =======================================================
+class SamplePythonLayer(PyLayer):
+    def forward(self, bottom, top):
+        print len(bottom)
+        print bottom[0].data
+        print 'hello'
+
+class Double(PyLayer):
+    def setup(self, bottom, top):
+        print 'setting up'
+    def forward(self, bottom, top):
+        top[0].reshape(bottom[0].shape)
+        top[0].data_tensor.copy_from(bottom[0].data_tensor)
+        top[0].data_tensor *= 2
+    def backward(self, top, bottom):
+        bottom[0].diff[:] += top[0].diff * 2
+
+class LstmSequence(PyLayer):
+    def setup(self, bottom, top):
+        print 'setting up'
+        print self.p.name
+    def forward(self, bottom, top):
+        top[0].reshape(bottom[0].shape)
+        top[0].data_tensor.copy_from(bottom[0].data_tensor)
+        top[0].data_tensor *= 2
+    def backward(self, top, bottom):
+        bottom[0].diff[:] = top[0].diff * 2
+
+class TheanoExample(PyLayer):
+    def setup(self, bottom, top):
+        import theano.tensor as T
+        import theano
+        x = T.dvector('x')
+        v = T.dvector('v')
+        y = x * 2
+        yg = T.Lop(y, x, v)
+        self.f = theano.function([x], y)
+        self.b = theano.function([x, v], yg, on_unused_input='warn')
+    def forward(self, bottom, top):
+        top[0].reshape(bottom[0].shape)
+        bottom[0].reshape((1,))
+        top[0].data[:] = self.f(bottom[0].data)
+    def backward(self, bottom, top):
+        top[0].reshape((1,))
+        bottom[0].reshape((1,))
+        bottom[0].diff[:] += self.b(bottom[0].data, top[0].diff)

@@ -639,3 +639,6 @@ $(DISTRIBUTE_DIR): all py | $(DISTRIBUTE_SUBDIRS)
 apollo: pycaffe
 	makecython++ apollo/_apollo.pyx '' "$(CXXFLAGS) $(PYTHON_LDFLAGS) -lcaffe"
 	rm apollo/_apollo.h
+
+sphinx:
+	cd pydocs && sphinx-apidoc -o apidoc ../apollo -f -P && $(MAKE) html

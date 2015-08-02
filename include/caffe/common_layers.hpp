@@ -369,6 +369,7 @@ class PyLayer : public Layer<Dtype> {
   virtual void Reshape(const vector<Blob<Dtype>*>& bottom,
       const vector<Blob<Dtype>*>& top) {}
   virtual inline const char* type() const { return "Py"; }
+  virtual inline bool overwrites_bottom_diffs() { return false; }
 
  protected:
   virtual void Forward_cpu(const vector<Blob<Dtype>*>& bottom,

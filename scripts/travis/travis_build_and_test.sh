@@ -19,7 +19,8 @@ else
   if ! $WITH_CUDA; then
     export CPU_ONLY=1
   fi
-  $MAKE all test pycaffe warn lint || true
+  #$MAKE all test pycaffe warn lint || true
+  $MAKE all test pycaffe warn || true
   if ! $WITH_CUDA; then
     $MAKE runtest
   fi

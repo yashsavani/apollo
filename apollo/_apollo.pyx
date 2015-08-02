@@ -223,6 +223,7 @@ cdef class Net:
             top_vec = [tops[name] for name in layer.p.top]
             if new_layer:
                 layer.blobs = self.layers[layer.p.name].blobs
+                layer.net = self
                 self.python_layers[layer.p.name] = layer
             cached_layer = self.python_layers[layer.p.name]
             cached_layer.kwargs = layer.kwargs

@@ -42,7 +42,7 @@ class Layer(object):
         self.train = kwargs.get('train', True)
 
 class PyLayer(Layer):
-    def __init__(self, kwargs):
+    def __init__(self, **kwargs):
         super(PyLayer ,self).__init__(kwargs)
         self.kwargs = kwargs
         self.p.type = 'Py'
@@ -364,16 +364,25 @@ class Wordvec(Layer):
 # Python Layers
 # =======================================================
 class SamplePythonLayer(PyLayer):
-    def __init__(self, **kwargs):
-        super(SamplePythonLayer, self).__init__(kwargs)
     def forward(self, bottom, top):
         print len(bottom)
         print bottom[0].data
         print 'hello'
 
 class Double(PyLayer):
-    def __init__(self, **kwargs):
-        super(Double, self).__init__(kwargs)
+    def setup(self, bottom, top):
+        print 'setting up'
+    def forward(self, bottom, top):
+        top[0].reshape(bottom[0].shape)
+        top[0].data_tensor.copy_from(bottom[0].data_tensor)
+        top[0].data_tensor *= 2
+    def backward(self, top, bottom):
+        bottom[0].diff[:] += top[0].diff * 2
+
+class LstmSequence(PyLayer):
+    def setup(self, bottom, top):
+        print 'setting up'
+        print self.p.name
     def forward(self, bottom, top):
         top[0].reshape(bottom[0].shape)
         top[0].data_tensor.copy_from(bottom[0].data_tensor)

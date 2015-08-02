@@ -42,6 +42,7 @@ cdef class Caffe:
         set_logging_verbosity(level)
 
 cdef class Tensor:
+    """Tensor class accessible from python"""
     cdef shared_ptr[CTensor] thisptr
     def __cinit__(self):
         self.thisptr.reset(new CTensor())
@@ -270,6 +271,7 @@ cdef class Net:
     def diff_l2_norm(self):
         return self.thisptr.DiffL2Norm()
     def reset_forward(self):
+        """Clears vector of layers to backpropped through after each forward pass"""
         self.thisptr.ResetForward()
     def active_layer_names(self):
         cdef vector[string] layer_names
@@ -417,6 +419,7 @@ class PyRuntimeParameter(object):
         return self.result
 
 def make_numpy_data_param(numpy_array):
+    """Serialize numpy array to prototxt"""
     assert numpy_array.dtype == pynp.float32
     cdef vector[int] v
     for x in numpy_array.shape:

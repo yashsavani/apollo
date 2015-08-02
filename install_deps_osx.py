@@ -1,5 +1,3 @@
-#!/usr/bin/python
-
 # import modules used here -- sys is a very standard one
 import sys
 import os
@@ -8,7 +6,11 @@ import fileinput
 import re
 from subprocess import call, check_output
 
+#CVPATH = './opencv.rb'
 CVPATH = '/usr/local/Library/Taps/homebrew/homebrew-science/opencv.rb'
+
+CV_LIB_EDIT = '#{py_prefix}/lib/libpython2.7.dylib'
+CV_INC_EDIT = '#{py_prefix}/include/python2.7'
 
 def check_install():
     brewloc = check_output(['which', 'brew']).strip()
@@ -47,10 +49,10 @@ def main():
     dpy_lib = re.compile("(DPYTHON.*LIBRARY.*=)(.*)\"")
     dpy_inc = re.compile("(DPYTHON.*INCLUDE.*DIR.*=)(.*)\"")
     for line in fileinput.input(CVPATH, inplace=True):
-        if dpy_lib.search(line) is not None :
-            sys.stdout.write(dpy_lib.sub(r'\1#{py_prefix}/lib/libpython2.7.dylib" \n# \2', line))
-        elif dpy_inc.search(line) is not None :
-            sys.stdout.write(dpy_inc.sub(r'\1#{py_prefix}/include/python2.7" \n# \2', line))
+        if dpy_lib.search(line) is not None and dpy_lib.findall(line)[0][1] != CV_LIB_EDIT:
+            sys.stdout.write(dpy_lib.sub(r'\1%s" \n# \2' % CV_LIB_EDIT, line))
+        elif dpy_inc.search(line) is not None and dpy_inc.findall(line)[0][1] != CV_INC_EDIT:
+            sys.stdout.write(dpy_inc.sub(r'\1%s" \n# \2' % CV_INC_EDIT, line))
         else:
             sys.stdout.write(line)
     print ""

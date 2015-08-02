@@ -59,6 +59,10 @@ def main():
     os.system('brew uninstall opencv; brew install opencv')
     print ""
 
+    print "Copying: Makefile.config.osx to Makefile.config"
+    os.system('cp Makefile.config.osx Makefile.config')
+    print ""
+
     print "DONE!"
 
 if __name__ == '__main__':

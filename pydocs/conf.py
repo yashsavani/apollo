@@ -52,8 +52,8 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'apollo'
-copyright = u'2015, Russell Stewart, Nico D. Jimenez'
-author = u'Russell Stewart, Nico D. Jimenez'
+copyright = u'2015, Nico D. Jimenez, Russell Stewart, Yash Savani'
+author = u'Nico D. Jimenez, Russell Stewart, Yash Savani'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -228,7 +228,7 @@ latex_elements = {
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
   (master_doc, 'apollo.tex', u'apollo Documentation',
-   u'Russell Stewart, Nico D. Jimenez', 'manual'),
+   u'Nico D. Jimenez, Russell Stewart, Yash Savani', 'manual'),
 ]
 
 # The name of an image file (relative to this directory) to place at the top of

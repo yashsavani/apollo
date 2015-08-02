@@ -338,6 +338,13 @@ class SoftmaxWithLoss(LossLayer):
         if ignore_label is not None:
             self.p.loss_param.ignore_label = ignore_label
 
+class Accuracy(LossLayer):
+    def __init__(self, ignore_label=None, **kwargs):
+        super(Accuracy, self).__init__(kwargs)
+        self.p.type = type(self).__name__
+        if ignore_label is not None:
+            self.p.loss_param.ignore_label = ignore_label
+
 class Transpose(Layer):
     def __init__(self, ignore_label=None, normalize=None, **kwargs):
         super(Transpose, self).__init__(kwargs)

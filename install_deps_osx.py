@@ -65,7 +65,7 @@ def main():
     print ""
 
     print "Removing: Anaconda version of opencv (There are conflicts between the homebrew version of opencv and the Anaconda version)"
-    os.system('conda uninstall opencv')
+    os.system('conda uninstall --yes opencv')
     print ""
 
     print "Installing: opencv"

@@ -31,8 +31,8 @@ def main():
     os.system('brew tap homebrew/science')
     print ""
     
-    print "Installing: snappy leveldb gflags glog szip lmdb"
-    os.system('for x in snappy leveldb gflags glog szip lmdb; do brew install -vd $x; done;')
+    print "Installing: snappy leveldb gflags glog szip lmdb graphviz openblas"
+    os.system('for x in snappy leveldb gflags glog szip lmdb graphviz openblas; do brew install -vd $x; done;')
     print ""
 
     print "Installing from source: protobuf boost boost-python"

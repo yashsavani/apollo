@@ -26,7 +26,7 @@ def check_install():
     
     path = os.environ['PATH']
     if 'anaconda' not in path:
-        raise Exception('Anaconda is not installed, please install Anaconda')
+        raise Exception('Anaconda is not installed, please install Anaconda and add the anaconda location to your path (e.g. export PATH=$HOME/anaconda:$PATH).')
 
 
 def main():

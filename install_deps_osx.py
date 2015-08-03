@@ -57,6 +57,10 @@ def main():
             sys.stdout.write(line)
     print ""
 
+    print "Removing: Anaconda version of opencv (There are conflicts between the homebrew version of opencv and the Anaconda version)"
+    os.system('conda uninstall opencv')
+    print ""
+
     print "Installing: opencv"
     os.system('brew uninstall opencv; brew install -vd opencv')
     print ""

@@ -72,7 +72,7 @@ class AccuracyLayer : public Layer<Dtype> {
 
   /// @brief Not implemented -- AccuracyLayer cannot be used as a loss.
   virtual void Backward_cpu(const vector<Blob<Dtype>*>& top,
-      const vector<bool>& propagate_down, const vector<Blob<Dtype>*>& bottom);
+      const vector<bool>& propagate_down, const vector<Blob<Dtype>*>& bottom) {}
 
   int label_axis_, outer_num_, inner_num_;
 

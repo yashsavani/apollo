@@ -35,7 +35,7 @@ def main():
     os.system('for x in snappy leveldb gflags glog szip lmdb; do brew install -vd $x; done;')
     print ""
 
-    print "Installing from source: protobuf boost-python"
+    print "Installing from source: protobuf boost boost-python"
     os.system('brew uninstall protobuf; brew install --build-from-source --with-python -vd protobuf; brew uninstall boost-python; brew install --build-from-source -vd boost boost-python')
     print ""
 
@@ -58,14 +58,22 @@ def main():
     print ""
 
     print "Installing: opencv"
-    os.system('brew uninstall opencv; brew install opencv')
+    os.system('brew uninstall opencv; brew install -vd opencv')
     print ""
 
     print "Copying: Makefile.config.osx to Makefile.config"
     os.system('cp Makefile.config.osx Makefile.config')
     print ""
 
-    print "DONE!"
+    print "Please modify the following environment variables in your .bashrc file"
+    print """
+export APOLLO_ROOT=%s
+export DYLD_LIBRARY_PATH=$DYLD_LIBRARY_PATH:$APOLLO_ROOT/build/lib
+export DYLD_FALLBACK_LIBRARY_PATH=$DYLD_FALLBACK_LIBRARY_PATH:$HOME/anaconda/lib
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$APOLLO_ROOT/build/lib:$HOME/anaconda/lib
+export PYTHONPATH=$PYTHONPATH:$APOLLO_ROOT:$APOLLO_ROOT/python/caffe/proto
+    """ % os.getcwd()
+    print "and then run $> make -j8"
 
 if __name__ == '__main__':
   main()

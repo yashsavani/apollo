@@ -11,6 +11,13 @@ CVPATH = '/usr/local/Library/Taps/homebrew/homebrew-science/opencv.rb'
 
 CV_LIB_EDIT = '#{py_prefix}/lib/libpython2.7.dylib'
 CV_INC_EDIT = '#{py_prefix}/include/python2.7'
+ENV_VARS = """
+export APOLLO_ROOT=%s
+export DYLD_LIBRARY_PATH=$DYLD_LIBRARY_PATH:$APOLLO_ROOT/build/lib
+export DYLD_FALLBACK_LIBRARY_PATH=$DYLD_FALLBACK_LIBRARY_PATH:$HOME/anaconda/lib
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$APOLLO_ROOT/build/lib:$HOME/anaconda/lib
+export PYTHONPATH=$PYTHONPATH:$APOLLO_ROOT:$APOLLO_ROOT/python/caffe/proto
+""" % os.getcwd()
 
 def check_install():
     brewloc = check_output(['which', 'brew']).strip()
@@ -69,15 +76,16 @@ def main():
     os.system('cp Makefile.config.osx Makefile.config')
     print ""
 
-    print "Please modify the following environment variables in your .bashrc file"
-    print """
-export APOLLO_ROOT=%s
-export DYLD_LIBRARY_PATH=$DYLD_LIBRARY_PATH:$APOLLO_ROOT/build/lib
-export DYLD_FALLBACK_LIBRARY_PATH=$DYLD_FALLBACK_LIBRARY_PATH:$HOME/anaconda/lib
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$APOLLO_ROOT/build/lib:$HOME/anaconda/lib
-export PYTHONPATH=$PYTHONPATH:$APOLLO_ROOT:$APOLLO_ROOT/python/caffe/proto
-    """ % os.getcwd()
-    print "and then run $> make -j8"
+    change_env_vars = raw_input("Do you want us to automatically change your environment variables in your ~/.bashrc for apollo ([y]/n)? ")
+    if change_env_vars == 'y' or change_env_vars == 'Y' or change_env_vars == '':
+        with open(os.path.expanduser("~/.bashrc"), "a") as bashrc:
+            bashrc.write(ENV_VARS)
+        os.system('source ~/.bashrc')
+    else:
+        print "Please modify the following environment variables:"
+        print ENV_VARS
+
+    print "run $> make -j8"
 
 if __name__ == '__main__':
   main()

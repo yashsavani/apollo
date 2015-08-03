@@ -374,7 +374,7 @@ def main():
     apollo.set_random_seed(hyper['random_seed'])
     apollo.set_mode_gpu()
     apollo.set_device(args.gpu)
-    apollo.set_logging_verbosity(args.verbosity)
+    apollo.set_logging_verbosity(args.loglevel)
 
     train()
     eval()

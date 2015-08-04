@@ -42,10 +42,8 @@ void LstmLayer<Dtype>::LayerSetUp(const vector<Blob<Dtype>*>& bottom,
       << "lstm_param.has_output_gate_weight_filler()";
 
   channels_ = lstm_param.num_cells();
-  input_data_size_ = (bottom[0]->channels() *
-        bottom[0]->width() *
-        bottom[0]->height());
-  num_ = bottom[0]->num();
+  input_data_size_ = bottom[0]->shape(1);
+  num_ = bottom[0]->shape(0);
   M_ = num_;
   N_ = channels_;
   K_ = input_data_size_;
@@ -102,8 +100,16 @@ void LstmLayer<Dtype>::Reshape(const vector<Blob<Dtype>*>& bottom,
   gates_diff_buffer_->Reshape(num_, 4 * channels_, 1, 1);
   next_state_tot_diff_buffer_->Reshape(num_, channels_, 1, 1);
   dldg_buffer_->Reshape(num_, channels_, 1, 1);
-  top[0]->Reshape(num_, channels_, 1, 1);
-  top[1]->Reshape(num_, channels_, 1, 1);
+  if (this->layer_param_.lstm_param().output_4d()) {
+    top[0]->Reshape(num_, channels_, 1, 1);
+    top[1]->Reshape(num_, channels_, 1, 1);
+  } else {
+    vector<int> shape;
+    shape.push_back(num_);
+    shape.push_back(channels_);
+    top[0]->Reshape(shape);
+    top[1]->Reshape(shape);
+  }
 }
 
 template <typename Dtype>

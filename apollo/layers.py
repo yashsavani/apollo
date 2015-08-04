@@ -257,6 +257,8 @@ class Lstm(Layer):
             self.p.lstm_param.input_gate_weight_filler.CopyFrom(kwargs['weight_filler'].filler_param)
             self.p.lstm_param.forget_gate_weight_filler.CopyFrom(kwargs['weight_filler'].filler_param)
             self.p.lstm_param.output_gate_weight_filler.CopyFrom(kwargs['weight_filler'].filler_param)
+        if 'output_4d' in kwargs:
+            self.p.lstm_param.output_4d = kwargs['output_4d']
 
 class L1Loss(LossLayer):
     def __init__(self, **kwargs):

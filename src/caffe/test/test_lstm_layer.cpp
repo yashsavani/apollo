@@ -69,6 +69,7 @@ void LstmLayerTest<TypeParam>::ReferenceLstmForward(
       blob_bottom.height(), blob_bottom.width());
   Dtype* top_data = blob_top->mutable_cpu_data();
   LstmParameter lstm_param = layer_param.lstm_param();
+  lstm_param.set_output_4d(true);
 }
 
 TYPED_TEST_CASE(LstmLayerTest, TestDtypesAndDevices);
@@ -77,6 +78,7 @@ TYPED_TEST(LstmLayerTest, TestSetupAcrossChannels) {
   typedef typename TypeParam::Dtype Dtype;
   LayerParameter layer_param;
   LstmParameter* lstm_param = layer_param.mutable_lstm_param();
+  lstm_param->set_output_4d(true);
   lstm_param->set_num_cells(NUM_CELLS);
   lstm_param->mutable_input_weight_filler()->set_type("xavier");
   lstm_param->mutable_input_gate_weight_filler()->set_type("xavier");
@@ -94,6 +96,7 @@ TYPED_TEST(LstmLayerTest, TestGradientAcrossChannels) {
   typedef typename TypeParam::Dtype Dtype;
   LayerParameter layer_param;
   LstmParameter* lstm_param = layer_param.mutable_lstm_param();
+  lstm_param->set_output_4d(true);
   lstm_param->set_num_cells(NUM_CELLS);
   lstm_param->mutable_input_weight_filler()->set_type("xavier");
   lstm_param->mutable_input_gate_weight_filler()->set_type("xavier");

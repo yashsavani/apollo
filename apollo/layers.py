@@ -300,11 +300,11 @@ class Pooling(Layer):
             self.p.pooling_param.global_pooling = kwargs['global_pooling']
         if 'pool' in kwargs:
             if kwargs['pool'] == 'MAX':
-                self.p.pooling_param.PoolMethod = caffe_pb2.PoolingParameter.MAX
-            elif kwargs['pool'] == 'AVG':
-                self.p.pooling_param.PoolMethod = caffe_pb2.PoolingParameter.AVG
+                self.p.pooling_param.pool = caffe_pb2.PoolingParameter.MAX
+            elif kwargs['pool'] == 'AVE':
+                self.p.pooling_param.pool = caffe_pb2.PoolingParameter.AVE
             elif kwargs['pool'] == 'STOCHASTIC':
-                self.p.pooling_param.PoolMethod = caffe_pb2.PoolingParameter.STOCHASTIC
+                self.p.pooling_param.pool = caffe_pb2.PoolingParameter.STOCHASTIC
             else:
                 raise ValueError('Unknown pooling method')
 

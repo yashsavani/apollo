@@ -31,13 +31,6 @@ class Layer(object):
                 param.lr_mult = param_lr_mults[i]
             if param_decay_mults:
                 param.decay_mult = param_decay_mults[i]
-        if 'phase' in kwargs:
-            if kwargs['phase'] == 'TRAIN':
-                self.p.phase = caffe_pb2.TRAIN
-            elif kwargs['phase'] == 'TEST':
-                self.p.phase = caffe_pb2.TEST
-            else:
-                raise ValueError('Unknown phase')
         self.deploy = kwargs.get('deploy', True)
         self.train = kwargs.get('train', True)
 

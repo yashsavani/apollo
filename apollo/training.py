@@ -44,7 +44,7 @@ class StepTraining:
 
         Returns 
         -------
-        loss_list : list of doubles
+        loss_list : list of floats
             Values of loss for each training iteration.  
         """
         self.net.phase = "test"

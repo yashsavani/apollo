@@ -54,7 +54,7 @@ class StepTraining:
             try:
                 batch = batch_iter.next()
             except StopIteration:
-                batch_iter = iter(batches)
+                batch_iter = iter(self.batch_iter)
                 batch = batch_iter.next()
                 
             # push data to network

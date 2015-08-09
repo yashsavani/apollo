@@ -1,6 +1,6 @@
 import logging
 
-class StepLearning:
+class StepTraining:
     def __init__(net, batch_iter, iter = 0):
         """
         Implements step learning rule.

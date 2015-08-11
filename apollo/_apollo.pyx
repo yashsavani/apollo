@@ -5,7 +5,7 @@ from libcpp cimport bool
 from libcpp.set cimport set
 from libcpp.map cimport map
 from cython.operator cimport postincrement, dereference
-from definitions cimport Tensor as CTensor, Blob as CBlob, Layer as CLayer, shared_ptr, LayerParameter, ApolloNet, TRAIN, TEST
+from definitions cimport Tensor as CTensor, Blob as CBlob, Layer as CLayer, shared_ptr, LayerParameter, ApolloNet as CApolloNet, TRAIN, TEST
 
 import numpy as pynp
 import utils.draw
@@ -192,11 +192,11 @@ cdef class Layer(object):
                 blobs.append(new_blob)
             return blobs
 
-cdef class Net:
-    cdef ApolloNet* thisptr
+cdef class ApolloNet:
+    cdef CApolloNet* thisptr
     python_layers = {}
     def __cinit__(self):
-        self.thisptr = new ApolloNet()
+        self.thisptr = new CApolloNet()
     def __dealloc__(self):
         del self.thisptr
     property phase:
@@ -271,9 +271,11 @@ cdef class Net:
         param.diff_tensor *= momentum
     def diff_l2_norm(self):
         return self.thisptr.DiffL2Norm()
-    def reset_forward(self):
+    def clear_forward(self):
         """Clears vector of layers to backpropped through after each forward pass"""
         self.thisptr.ResetForward()
+    def reset_forward(self):
+        self.clear_forward()
     def active_layer_names(self):
         cdef vector[string] layer_names
         layer_names = self.thisptr.active_layer_names()

@@ -2,7 +2,10 @@ import caffe_pb2
 import log
 import utils
 
-from ._apollo import Tensor, Net, Caffe, make_numpy_data_param, Blob
+from ._apollo import Tensor, ApolloNet, Caffe, make_numpy_data_param, Blob
+from net import Net
+import solvers
+import loggers
 
 log.setup_logging()
 

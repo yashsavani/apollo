@@ -130,6 +130,10 @@ Dtype ApolloNet<Dtype>::ForwardLayer(const string& layer_param_string) {
 
     Dtype loss = 0;
     layer->set_phase(phase_);
+    //if (new_layer && caffe_model_weights_.find(layer_name) != caffe_model_weights_.end()) { TODO
+      //layer->Reshape(bottom_vec, top_vec);
+      //CopyTrainedLayerNameFrom(layer_name);
+    //}
     loss = layer->Forward(bottom_vec, top_vec);
     return loss;
 }
@@ -176,7 +180,9 @@ void ApolloNet<Dtype>::AddLayerParams(shared_ptr<Layer<Dtype> > layer) {
     if (local_params_.find(param_name) == local_params_.end()) {
       local_params_[param_name] = layer->blobs()[i];
       params_[param_name] = shared_ptr<Blob<Dtype> >(new Blob<Dtype>(layer->blobs()[i]->shape()));
-      //shared_ptr<Blob<Dtype> > master_ptr = params_[param_name];
+      //if (params_.find(param_name) == params_.end()) { TODO
+        //params_[param_name] = shared_ptr<Blob<Dtype> >(new Blob<Dtype>(layer->blobs()[i]->shape()));
+      //}
       params_[param_name]->ShareData(*local_params_[param_name]);
       if (!layer->overwrites_param_diffs()) {
         params_[param_name]->ShareDiff(*local_params_[param_name]);
@@ -259,6 +265,29 @@ void ApolloNet<Dtype>::CopyTrainedLayersFrom(const NetParameter& param) {
     }
   }
 }
+
+//template <typename Dtype> TODO
+//void ApolloNet<Dtype>::CopyTrainedLayerNameFrom(const NetParameter& param, const string& target_layer_name) {
+  //int num_source_layers = param.layer_size();
+  //for (int i = 0; i < num_source_layers; ++i) {
+    //const LayerParameter& source_layer = param.layer(i);
+    //const string& source_layer_name = source_layer.name();
+    //if (source_layer_name != target_layer_name) {
+      //continue;
+    //}
+
+    //LOG(INFO) << "Copying source layer " << source_layer_name;
+    //vector<shared_ptr<Blob<Dtype> > >& target_blobs =
+        //layers_map_[source_layer_name]->blobs();
+      
+    //ASSERT(target_blobs.size() == source_layer.blobs_size(),
+        //"Incompatible number of blobs for layer " << source_layer_name);
+    //for (int j = 0; j < target_blobs.size(); ++j) {
+      //const bool kReshape = false;
+      //target_blobs[j]->FromProto(source_layer.blobs(j), kReshape);
+    //}
+  //}
+//}
 
 INSTANTIATE_CLASS(ApolloNet);
 

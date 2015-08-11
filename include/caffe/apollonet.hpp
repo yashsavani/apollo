@@ -87,6 +87,7 @@ class ApolloNet {
   map<string, shared_ptr<Blob<Dtype> > > tops_;
   map<string, shared_ptr<Blob<Dtype> > > params_;
   map<string, shared_ptr<Blob<Dtype> > > local_params_;
+  //map<string, vector<shared_ptr<Blob<Dtype> > > > caffe_layer_weights_; TODO
   map<string, Dtype> param_decay_mults_;
   map<string, Dtype> param_lr_mults_;
   map<string, vector<shared_ptr<Blob<Dtype> > > > bottom_blobs_;

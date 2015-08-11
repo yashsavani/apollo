@@ -31,15 +31,16 @@ class OverfeatNet:
             clip_gradients=hyper.get('clip_gradients', -1), weight_decay=hyper['weight_decay'])
 
     def test_batch_is(self, batch):
-        val = self.batch_is(batch, "TEST")
+        val = self.batch_is(batch, "test")
         self.net.reset_forward()
         return val
         
     def train_batch_is(self, batch):
-        val = self.batch_is(batch, "TRAIN")
+        val = self.batch_is(batch, "train")
         return val
 
     def batch_is(self, batch, phase):
+        self.net.phase = phase
         self.batch = batch
         image_array = batch.image_array
         bbox_label = batch.bbox_label_array
@@ -58,34 +59,52 @@ class OverfeatNet:
         conv_decay_mults = [1.0, 0.0]
 
         # bunch of conv / relu layers
-        net.forward_layer(layers.Convolution(name="conv1", bottoms=["data"], param_lr_mults=conv_lr_mults, param_decay_mults=conv_decay_mults, kernel_size=5, stride=1, pad=2, weight_filler=weight_filler, bias_filler=bias_filler, num_output=150))
+        net.forward_layer(layers.Convolution(name="conv1", bottoms=["data"], param_lr_mults=conv_lr_mults, 
+            param_decay_mults=conv_decay_mults, kernel_size=5, stride=1, pad=2, weight_filler=weight_filler, 
+            bias_filler=bias_filler, num_output=150))
         net.forward_layer(layers.ReLU(name="relu1", bottoms=["conv1"], tops=["conv1"]))
 
-        net.forward_layer(layers.Convolution(name="conv2", bottoms=["conv1"], param_lr_mults=conv_lr_mults, param_decay_mults=conv_decay_mults, kernel_size=5, stride=1, pad=2, weight_filler=weight_filler, bias_filler=bias_filler, num_output=150))
+        net.forward_layer(layers.Convolution(name="conv2", bottoms=["conv1"], param_lr_mults=conv_lr_mults, 
+            param_decay_mults=conv_decay_mults, kernel_size=5, stride=1, pad=2, weight_filler=weight_filler, 
+            bias_filler=bias_filler, num_output=150))
         net.forward_layer(layers.ReLU(name="relu2", bottoms=["conv2"], tops=["conv2"]))
 
         # only pooling layer
         net.forward_layer(layers.Pooling(name="pool4", bottoms=["conv2"], kernel_size=2, stride=2)) # finished 2nd pool
 
-        net.forward_layer(layers.Convolution(name="conv3", bottoms=["pool4"], param_lr_mults=conv_lr_mults, param_decay_mults=conv_decay_mults, kernel_size=5, stride=1, pad=2, weight_filler=weight_filler, bias_filler=bias_filler, num_output=150))
+        net.forward_layer(layers.Convolution(name="conv3", bottoms=["pool4"], param_lr_mults=conv_lr_mults, 
+            param_decay_mults=conv_decay_mults, kernel_size=5, stride=1, pad=2, weight_filler=weight_filler, 
+            bias_filler=bias_filler, num_output=150))
         net.forward_layer(layers.ReLU(name="relu3", bottoms=["conv3"], tops=["conv3"]))
 
-        net.forward_layer(layers.Convolution(name="conv4", bottoms=["conv3"], param_lr_mults=conv_lr_mults, param_decay_mults=conv_decay_mults, kernel_size=5, stride=1, pad=2, weight_filler=weight_filler, bias_filler=bias_filler, num_output=150))
+        net.forward_layer(layers.Convolution(name="conv4", bottoms=["conv3"], param_lr_mults=conv_lr_mults, 
+            param_decay_mults=conv_decay_mults, kernel_size=5, stride=1, pad=2, weight_filler=weight_filler, 
+            bias_filler=bias_filler, num_output=150))
         net.forward_layer(layers.ReLU(name="relu4", bottoms=["conv4"], tops=["conv4"]))
 
-        net.forward_layer(layers.Convolution(name="conv5", bottoms=["conv4"], param_lr_mults=conv_lr_mults, param_decay_mults=conv_decay_mults, kernel_size=5, stride=1, pad=2, weight_filler=weight_filler, bias_filler=bias_filler, num_output=150)) 
+        net.forward_layer(layers.Convolution(name="conv5", bottoms=["conv4"], param_lr_mults=conv_lr_mults, 
+            param_decay_mults=conv_decay_mults, kernel_size=5, stride=1, pad=2, weight_filler=weight_filler, 
+            bias_filler=bias_filler, num_output=150)) 
         net.forward_layer(layers.ReLU(name="relu5", bottoms=["conv5"], tops=["conv5"]))
 
-        net.forward_layer(layers.Convolution(name="conv6", bottoms=["conv5"], param_lr_mults=conv_lr_mults, param_decay_mults=conv_decay_mults, kernel_size=5, stride=1, pad=2, weight_filler=weight_filler, bias_filler=bias_filler, num_output=150)) 
+        net.forward_layer(layers.Convolution(name="conv6", bottoms=["conv5"], param_lr_mults=conv_lr_mults, 
+            param_decay_mults=conv_decay_mults, kernel_size=5, stride=1, pad=2, weight_filler=weight_filler, 
+            bias_filler=bias_filler, num_output=150)) 
         net.forward_layer(layers.ReLU(name="relu6", bottoms=["conv6"], tops=["conv6"]))
 
-        net.forward_layer(layers.Convolution(name="conv_0", bottoms=["conv6"], param_lr_mults=conv_lr_mults, param_decay_mults=conv_decay_mults, kernel_size=5, stride=1, pad=2, weight_filler=weight_filler, bias_filler=bias_filler, num_output=150)) 
+        net.forward_layer(layers.Convolution(name="conv_0", bottoms=["conv6"], param_lr_mults=conv_lr_mults, 
+            param_decay_mults=conv_decay_mults, kernel_size=5, stride=1, pad=2, weight_filler=weight_filler, 
+            bias_filler=bias_filler, num_output=150)) 
         net.forward_layer(layers.ReLU(name="relu_0", bottoms=["conv_0"], tops=["conv_0"]))
 
-        net.forward_layer(layers.Convolution(name="conv_1", bottoms=["conv_0"], param_lr_mults=conv_lr_mults, param_decay_mults=conv_decay_mults, kernel_size=5, stride=1, pad=2, weight_filler=weight_filler, bias_filler=bias_filler, num_output=150)) 
+        net.forward_layer(layers.Convolution(name="conv_1", bottoms=["conv_0"], param_lr_mults=conv_lr_mults, 
+            param_decay_mults=conv_decay_mults, kernel_size=5, stride=1, pad=2, weight_filler=weight_filler, 
+            bias_filler=bias_filler, num_output=150)) 
         net.forward_layer(layers.ReLU(name="relu_1", bottoms=["conv_1"], tops=["conv_1"]))
 
-        net.forward_layer(layers.Convolution(name="conv_2", bottoms=["conv_1"], param_lr_mults=conv_lr_mults, param_decay_mults=conv_decay_mults, kernel_size=5, stride=1, pad=2, weight_filler=weight_filler, bias_filler=bias_filler, num_output=150)) 
+        net.forward_layer(layers.Convolution(name="conv_2", bottoms=["conv_1"], param_lr_mults=conv_lr_mults, 
+            param_decay_mults=conv_decay_mults, kernel_size=5, stride=1, pad=2, weight_filler=weight_filler, 
+            bias_filler=bias_filler, num_output=150)) 
         net.forward_layer(layers.ReLU(name="relu_2", bottoms=["conv_2"], tops=["conv_2"]))
 
         # inner product layers
@@ -93,30 +112,41 @@ class OverfeatNet:
             param_decay_mults=conv_decay_mults, kernel_size=1,
             weight_filler=weight_filler, bias_filler=bias_filler, num_output=4000))
         net.forward_layer(layers.ReLU(name="relu8", bottoms=["conv8"], tops=["conv8"]))
-        layers.Dropout(name="drop0", bottoms=["conv8"], tops=["conv8"], dropout_ratio=0.5, phase=phase),
+        net.forward_layer(layers.Dropout(name="drop0", bottoms=["conv8"], tops=["conv8"], dropout_ratio=0.5))
         net.forward_layer(layers.Convolution(name="L7", bottoms=["conv8"], param_lr_mults=conv_lr_mults,
             param_decay_mults=conv_decay_mults, kernel_size=1,
             weight_filler=weight_filler, bias_filler=bias_filler, num_output=4000))
         net.forward_layer(layers.ReLU(name="relu9", bottoms=["L7"], tops=["L7"]))
-        layers.Dropout(name="drop1", bottoms=["L7"], tops=["L7"], dropout_ratio=0.5, phase=phase),
+        net.forward_layer(layers.Dropout(name="drop1", bottoms=["L7"], tops=["L7"], dropout_ratio=0.5))
 
         # binary prediction layers: is a character here ? 
-        net.forward_layer(layers.Convolution(name="binary_conf_pred", bottoms=["L7"], param_lr_mults=conv_lr_mults, param_decay_mults=conv_decay_mults, kernel_size=1, weight_filler=weight_filler, bias_filler=bias_filler, num_output=2))
-        binary_softmax_loss = net.forward_layer(layers.SoftmaxWithLoss(name='binary_softmax_loss', bottoms=['binary_conf_pred', 'binary_label']))
+        net.forward_layer(layers.Convolution(name="binary_conf_pred", bottoms=["L7"], 
+            param_lr_mults=conv_lr_mults, param_decay_mults=conv_decay_mults, kernel_size=1, 
+            weight_filler=weight_filler, bias_filler=bias_filler, num_output=2))
+        binary_softmax_loss = net.forward_layer(layers.SoftmaxWithLoss(name='binary_softmax_loss', 
+            bottoms=['binary_conf_pred', 'binary_label']))
         net.forward_layer(layers.Softmax(name='binary_softmax', bottoms=['binary_conf_pred']))
 
         # character predictions
         label_softmax_loss = 0
-        net.forward_layer(layers.Convolution(name="label_conf_pred", bottoms=["L7"], param_lr_mults=conv_lr_mults, param_decay_mults=conv_decay_mults, kernel_size=1, weight_filler=weight_filler, bias_filler=bias_filler, num_output=11))
-        label_softmax_loss = net.forward_layer(layers.SoftmaxWithLoss(name='label_softmax_loss', bottoms=['label_conf_pred', 'conf_label'], loss_weight=1., ignore_label = 0))
+        net.forward_layer(layers.Convolution(name="label_conf_pred", bottoms=["L7"], 
+            param_lr_mults=conv_lr_mults, param_decay_mults=conv_decay_mults, kernel_size=1, 
+            weight_filler=weight_filler, bias_filler=bias_filler, num_output=11))
+        label_softmax_loss = net.forward_layer(layers.SoftmaxWithLoss(name='label_softmax_loss', 
+            bottoms=['label_conf_pred', 'conf_label'], loss_weight=1., ignore_label = 0))
         net.forward_layer(layers.Softmax(name='label_softmax', bottoms=['label_conf_pred']))
 
         # bounding box prediction
-        net.forward_layer(layers.Convolution(name="bbox_pred", bottoms=["L7"], param_lr_mults=conv_lr_mults, param_decay_mults=[0., 0.], kernel_size=1, weight_filler=weight_filler, bias_filler=bias_filler, num_output=4))
+        net.forward_layer(layers.Convolution(name="bbox_pred", bottoms=["L7"], 
+            param_lr_mults=conv_lr_mults, param_decay_mults=[0., 0.], kernel_size=1, 
+            weight_filler=weight_filler, bias_filler=bias_filler, num_output=4))
         net.forward_layer(layers.Concat(name='bbox_mask', bottoms =  4 * ['binary_label']))
-        net.forward_layer(layers.Eltwise(name='bbox_pred_masked', bottoms=['bbox_pred', 'bbox_mask'], operation='PROD'))
-        net.forward_layer(layers.Eltwise(name='bbox_label_masked', bottoms=['bbox_label', 'bbox_mask'], operation='PROD'))
-        bbox_loss = net.forward_layer(layers.L1Loss(name='l1_loss', bottoms=['bbox_pred_masked', 'bbox_label_masked'], loss_weight=0.001))
+        net.forward_layer(layers.Eltwise(name='bbox_pred_masked', 
+            bottoms=['bbox_pred', 'bbox_mask'], operation='PROD'))
+        net.forward_layer(layers.Eltwise(name='bbox_label_masked', 
+            bottoms=['bbox_label', 'bbox_mask'], operation='PROD'))
+        bbox_loss = net.forward_layer(layers.L1Loss(name='l1_loss', 
+            bottoms=['bbox_pred_masked', 'bbox_label_masked'], loss_weight=0.001))
         
         return (binary_softmax_loss, label_softmax_loss, bbox_loss)
 

@@ -19,7 +19,7 @@ ApolloNet<Dtype>::ApolloNet() {
 }
 
 template <typename Dtype>
-Dtype ApolloNet<Dtype>::ForwardLayer(const string& layer_param_string, const string& runtime_param_string) {
+Dtype ApolloNet<Dtype>::ForwardLayer(const string& layer_param_string) {
     /* This function will
      * 1) Check if the layer name is in the cache
      * 2) Create the layer if it is new
@@ -29,9 +29,8 @@ Dtype ApolloNet<Dtype>::ForwardLayer(const string& layer_param_string, const str
      * 6) Call the Forward function */ 
      
     LayerParameter active_layer_param;
-    RuntimeParameter runtime_param;
-    ASSERT(runtime_param.ParseFromString(runtime_param_string), "");
     ASSERT(active_layer_param.ParseFromString(layer_param_string), "");
+    RuntimeParameter runtime_param = active_layer_param.rp();
     ASSERT(active_layer_param.has_name(), "");
     const string& layer_name = active_layer_param.name();
     shared_ptr<Layer<Dtype> > layer;

@@ -62,7 +62,7 @@ cdef extern from "caffe/layer.hpp" namespace "caffe":
 cdef extern from "caffe/apollonet.hpp" namespace "caffe":
     cdef cppclass ApolloNet[float]:
         ApolloNet()
-        float ForwardLayer(string layer_param_string, string runtime_param_string) except +
+        float ForwardLayer(string layer_param_string) except +
         void BackwardLayer(string layer_name) except +
         void ResetForward()
         float DiffL2Norm()

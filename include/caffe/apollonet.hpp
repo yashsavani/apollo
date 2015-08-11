@@ -25,8 +25,7 @@ class ApolloNet {
     phase_ = TRAIN;
   }
 
-  Dtype ForwardLayer(const string& layer_param_string,
-    const string& runtime_param_string);
+  Dtype ForwardLayer(const string& layer_param_string);
 
   void BackwardLayer(const string& layer_name);
 

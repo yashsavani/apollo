@@ -191,7 +191,7 @@ cdef class Layer(object):
                 new_blob.Init(cblobs[i])
                 blobs.append(new_blob)
             return blobs
-        
+
 cdef class Net:
     cdef ApolloNet* thisptr
     python_layers = {}
@@ -217,7 +217,7 @@ cdef class Net:
     def forward_layer(self, layer):
         if layer.p.type == 'Py':
             new_layer = (layer.p.name not in self.layers)
-            self.thisptr.ForwardLayer(layer.p.SerializeToString(), layer.r.SerializeToString())
+            self.thisptr.ForwardLayer(layer.p.SerializeToString())
             tops = self.tops
             bottom_vec = [tops[name] for name in layer.p.bottom]
             top_vec = [tops[name] for name in layer.p.top]
@@ -233,10 +233,10 @@ cdef class Net:
                 cached_layer.p.ClearField('bottom')
                 for bottom_name in layer.p.bottom:
                     cached_layer.p.bottom.append(bottom_name)
-                cached_layer.r.CopyFrom(layer.r)
+                cached_layer.p.rp.CopyFrom(layer.p.rp)
             loss = cached_layer.forward(bottom_vec, top_vec)
         else:
-            loss = self.thisptr.ForwardLayer(layer.p.SerializeToString(), layer.r.SerializeToString())
+            loss = self.thisptr.ForwardLayer(layer.p.SerializeToString())
         return loss
     def backward_layer(self, layer_name):
         if layer_name in self.python_layers:

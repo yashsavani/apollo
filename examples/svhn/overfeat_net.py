@@ -112,12 +112,12 @@ class OverfeatNet:
             param_decay_mults=conv_decay_mults, kernel_size=1,
             weight_filler=weight_filler, bias_filler=bias_filler, num_output=4000))
         net.forward_layer(layers.ReLU(name="relu8", bottoms=["conv8"], tops=["conv8"]))
-        layers.Dropout(name="drop0", bottoms=["conv8"], tops=["conv8"], dropout_ratio=0.5)
+        net.forward_layer(layers.Dropout(name="drop0", bottoms=["conv8"], tops=["conv8"], dropout_ratio=0.5))
         net.forward_layer(layers.Convolution(name="L7", bottoms=["conv8"], param_lr_mults=conv_lr_mults,
             param_decay_mults=conv_decay_mults, kernel_size=1,
             weight_filler=weight_filler, bias_filler=bias_filler, num_output=4000))
         net.forward_layer(layers.ReLU(name="relu9", bottoms=["L7"], tops=["L7"]))
-        layers.Dropout(name="drop1", bottoms=["L7"], tops=["L7"], dropout_ratio=0.5)
+        net.forward_layer(layers.Dropout(name="drop1", bottoms=["L7"], tops=["L7"], dropout_ratio=0.5))
 
         # binary prediction layers: is a character here ? 
         net.forward_layer(layers.Convolution(name="binary_conf_pred", bottoms=["L7"], 

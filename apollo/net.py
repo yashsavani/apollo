@@ -8,12 +8,15 @@ class Net:
     def add(self, job):
         self.jobs.append(job)
     def forward(self, state, input_data={}):
-        loss = 0.
         for job in self.jobs:
             if state in job.states():
-                loss += job.forward(self.apollo_net, input_data)
+                if job.is_data_job():
+                    job.run(self.apollo_net, input_data)
+                else:
+                    job.run(self.apollo_net)
                 self.active_jobs.append(job)
-        return loss
+    def backward(self):
+        self.apollo_net.backward()
     @property
     def params(self):
         return self.apollo_net.params

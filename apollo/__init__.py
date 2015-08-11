@@ -1,3 +1,4 @@
+import jobs
 import caffe_pb2
 import log
 import utils

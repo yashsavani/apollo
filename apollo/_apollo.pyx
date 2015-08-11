@@ -195,6 +195,7 @@ cdef class Layer(object):
 cdef class ApolloNet:
     cdef CApolloNet* thisptr
     python_layers = {}
+    cdef public float loss
     def __cinit__(self):
         self.thisptr = new CApolloNet()
     def __dealloc__(self):
@@ -234,10 +235,9 @@ cdef class ApolloNet:
                 for bottom_name in layer.p.bottom:
                     cached_layer.p.bottom.append(bottom_name)
                 cached_layer.p.rp.CopyFrom(layer.p.rp)
-            loss = cached_layer.forward(bottom_vec, top_vec)
+            self.loss += cached_layer.forward(bottom_vec, top_vec)
         else:
-            loss = self.thisptr.ForwardLayer(layer.p.SerializeToString())
-        return loss
+            self.loss += self.thisptr.ForwardLayer(layer.p.SerializeToString())
     def backward_layer(self, layer_name):
         if layer_name in self.python_layers:
             cached_layer = self.python_layers[layer_name]
@@ -273,6 +273,7 @@ cdef class ApolloNet:
         return self.thisptr.DiffL2Norm()
     def clear_forward(self):
         """Clears vector of layers to backpropped through after each forward pass"""
+        self.loss = 0.
         self.thisptr.ResetForward()
     def reset_forward(self):
         self.clear_forward()

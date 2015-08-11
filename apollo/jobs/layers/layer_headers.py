@@ -7,11 +7,8 @@ class Layer(Job):
     def __init__(self, sublayer, name, kwargs):
         self.parse(sublayer, name, kwargs)
 
-    def forward(self, apollo_net, input_data):
+    def run(self, apollo_net):
         return apollo_net.forward_layer(self)
-
-    def backward(self, apollo_net):
-        apollo_net.backward_layer(self.p.name)
 
     def parse(self, sublayer, name, kwargs):
         self.p = caffe_pb2.LayerParameter()

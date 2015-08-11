@@ -1,2 +1,2 @@
-from layers import *
-from generators import *
+import layers
+import generators

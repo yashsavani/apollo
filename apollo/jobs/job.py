@@ -1,7 +1,7 @@
 class Job(object):
-    def forward(self, apollo_net, input_data):
+    def run(self, apollo_net):
         raise NotImplementedError('Not Implemented')
-    def backward(self, apollo_net):
-        pass
+    def is_data_job(self):
+        return False
     def states(self):
         return ['train', 'val', 'deploy']

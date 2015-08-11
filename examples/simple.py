@@ -1,18 +1,29 @@
-import apollo.jobs as J
+from apollo.jobs.layers import Convolution, EuclideanLoss
+from apollo.jobs.generators import InputData
 import apollo
 import numpy as np
 
 def get_data():
-    example = np.array(np.random.random()).reshape((1, 1, 1, 1))
+    example = np.random.random((3, 5, 5))
     return {'data': example, 'label': example * 3}
 
+apollo.set_mode_gpu()
 net = apollo.Net()
-net.add(J.NumpyJob('label'))
-net.add(J.NumpyJob('data'))
-net.add(J.Convolution('conv', (1, 1), 1, bottoms=['data']))
-net.add(J.EuclideanLoss('loss', bottoms=['conv', 'label']))
+net.add(InputData('label'))
+net.add(InputData('data'))
+net.add(Convolution('conv', (1, 1), 3, bottoms=['data']))
+net.add(EuclideanLoss('loss', bottoms=['conv', 'label']))
 
-trainer = apollo.solvers.SGD(net, 0.1,
+trainer = apollo.solvers.SGD(net, 0.01,
     max_iter=1000, loggers=[apollo.loggers.DisplayLogger(100)])
 
 trainer.fit([get_data() for _ in xrange(1000)])
+
+
+#length_ref = []
+#r = Recurrent(length_ref)
+#r.add_job()
+#r.add_job()
+
+#net.add(NumpyDataSeq(length_ref))
+#net.add(r)

@@ -5,7 +5,9 @@ class Net:
         self.jobs = []
         self.active_jobs = []
         self.apollo_net = ApolloNet()
-    def add(self, job):
+    def add(self, job, states=None):
+        if states is not None:
+            job.states = lambda: states
         self.jobs.append(job)
     def forward(self, state, input_data={}):
         for job in self.jobs:

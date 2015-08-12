@@ -16,6 +16,14 @@ set_logging_verbosity = Caffe.set_logging_verbosity
 set_device = Caffe.set_device
 set_logging_verbosity(3)
 
+def set_gpu_device(device_id=-1):
+    if device_id == -1:
+        set_mode_cpu()
+    else:
+        set_mode_gpu()
+        set_device(device_id)
+
+
 def set_random_seed(value):
     import numpy as np
     import random

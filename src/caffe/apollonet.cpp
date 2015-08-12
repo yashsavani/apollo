@@ -58,7 +58,7 @@ Dtype ApolloNet<Dtype>::ForwardLayer(const string& layer_param_string) {
     bool reset_bottoms = active_layer_param.bottom_size() != bottom_names.size();
     for (int bottom_id = 0; bottom_id < active_layer_param.bottom_size(); ++bottom_id) {
       const string& blob_name = active_layer_param.bottom(bottom_id);
-      ASSERT(tops_.find(blob_name) != tops_.end(), 
+      ASSERT(active_tops_set_.find(blob_name) != active_tops_set_.end(), 
           "Could not find bottom: '" << blob_name << "' for layer: " << layer_name);
       if (bottom_names.size() > bottom_id && bottom_names[bottom_id] != blob_name) { reset_bottoms = true; }
     }

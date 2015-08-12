@@ -47,7 +47,7 @@ class SGD(object):
         self.batch_size = batch_size
         self.loggers = loggers
 
-    def fit(self, train_data, val_data=None):
+    def solve(self, train_data, val_data=None):
         if self.random_seed is not None:
             apollo.set_random_seed(self.random_seed)
         train_data = make_batch_generator(train_data, self.batch_size)

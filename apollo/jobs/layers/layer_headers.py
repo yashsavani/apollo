@@ -92,6 +92,8 @@ class LossLayer(Layer):
         loss_weight = kwargs.get('loss_weight', 1.)
         self.p.loss_weight.append(loss_weight)
         assert 'tops' not in kwargs or kwargs['tops'] == 1
+    def states(self):
+        return ['train', 'val']
 
 class DataLayer(Layer):
     def __init__(self, sublayer, name, kwargs):

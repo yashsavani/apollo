@@ -46,7 +46,7 @@ class Layer(Job):
             assign_proto(self.p, 'deploy', kwargs['deploy'])
         default_params = set(['name', 'bottoms', 'tops',
                              'deploy', 'train',
-                             'param_names, param_lr_mults',
+                             'param_names', 'param_lr_mults',
                              'param_decay_mults'])
 
         if param_type in layer_helpers.param_names:

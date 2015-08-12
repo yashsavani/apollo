@@ -40,8 +40,8 @@ class Data(DataLayer):
 
 class Dropout(Layer):
     def __init__(self, name, dropout_ratio, **kwargs):
-        super(Dropout, self).__init__(kwargs)
-        self.p.dropout_param.dropout_ratio = dropout_ratio
+        kwargs['dropout_ratio'] = dropout_ratio
+        super(Dropout, self).__init__(self, name, kwargs)
 
 class DummyData(DataLayer):
     def __init__(self, name, shape, **kwargs):

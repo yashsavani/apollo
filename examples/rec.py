@@ -25,7 +25,7 @@ r.add_job(InnerProduct, name='ip', num_output=1, bottoms=['lstm'])
 r.add_job(EuclideanLoss, name='loss', bottoms=['ip', 'label'])
 net.add(r)
 
-trainer = apollo.solvers.SGD(net, 0.1, gamma_lr=0.9, gamma_stepsize=1000,
-    loggers=[apollo.loggers.DisplayLogger(100)])
+net.solver = apollo.solvers.SGD(net, 0.1, gamma_lr=0.9, gamma_stepsize=1000,
+    loggers=[apollo.loggers.TrainLogger(100)])
 
-trainer.fit([get_data() for _ in xrange(5000)])
+net.fit([get_data() for _ in xrange(5000)])
